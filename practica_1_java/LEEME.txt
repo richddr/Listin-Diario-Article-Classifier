@@ -1,0 +1,21 @@
+﻿Practica 1
+Richard Garcia || Ricardo Batista
+
+Algoritmos de clasificacion utilizados: Naive Bayes, SVM
+Algoritmo optimo: SVM
+
+-Para preprocesar los datos, se procede a leer articulos de deportes y otros temas desde un achivo csv. Se crearon scripts en python que descargan los articulos nuevos del feed rss del listin diario. Luego de leer los archivos se procede a cambiar todas las palabras a minusculas, se filtran los "stop-words" mediante un diccionario español encontrado en la web, se tokeniza por "non-letter" y se filtran los tokens para omitir las palabras que sean menores de 3 caracteres. Luego se procede a aplicarlo el algoritmo de clasificacion. 
+
+Existe otro script python que lee los articulos de la portada y los guarda en un archivo de forma csv. Este es el archivo que se utiliza de prueba para la aplicacion java.
+
+En Rapidminer, aplicando el mismo preprocesamiento a ambos algoritmos y compararandolos pudimos ver que SVM siempre obtuvo un mejor porcentaje (90-100%) de acertacion en comparacion con Naive Bayes(<=80%). Por lo tanto para la aplicacion java se utilizara el proceso de SVM para predecir.
+
+Notas:
+-al correr la aplicacion java, se debe de correr primero el script python "practica_1_testData" que esta en "/csv" para obtener los articulos de la portada de ese dia. Tratamos de incluir este paso en el mismo codigo java corriendo comandos cmd desde la aplicacion pero no funciono.
+
+-Correr los mismo procesos con el mismo training set y test data dan resultados diferentes en rapidminer y via java. Resulta que rapidminer lo hace mucho mas mejor que via java en la mayoria de los casos. Esto podria ser que al correrlo en java el proceso resalta varios warnings. Dichos warnings no salen en rapidminer. Dichos warnings solo ocurre si se intenta cambiar el archivo de training set o test data mediante la aplicacion java. Estan "hardcoded" por default los de utilizar. De esta modo no presenta los warnings y los resultados por la aplicacion son iguales que los que arroja rapidminer
+
+-Nos tomamos la libertad de convertir nuestros procesos dinamicos en el sentido de que si se quiere especificar un training set o un test data diferente, solo se tiene que especificar la ruta en el codigo. Se agregaron varios test data en la carpeta "/csv" del proyecto. Al hacerlo asi podria generar resultados diferentes a ejecutar el proceso via rapidminer ya que dara warnings.
+
+
+

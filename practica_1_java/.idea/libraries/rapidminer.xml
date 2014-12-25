@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="rapidminer">
+    <CLASSES>
+      <root url="jar://C:/Program Files/RapidMiner/RapidMiner Studio/lib/rapidminer.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

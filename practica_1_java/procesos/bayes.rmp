@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process version="6.0.008">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="6.0.008" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="windows-1250"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="6.0.008" expanded="true" height="60" name="Read CSV (2)" width="90" x="45" y="30">
+        <parameter key="csv_file" value="C:\Users\Richard\IdeaProjects\practica_1_java\csv\listin-articulos.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="trim_lines" value="false"/>
+        <parameter key="use_quotes" value="true"/>
+        <parameter key="quotes_character" value="&quot;"/>
+        <parameter key="escape_character" value="\"/>
+        <parameter key="skip_comments" value="false"/>
+        <parameter key="comment_characters" value="#"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="grouped_digits" value="false"/>
+        <parameter key="grouping_character" value=","/>
+        <parameter key="date_format" value=""/>
+        <parameter key="first_row_as_names" value="false"/>
+        <list key="annotations">
+          <parameter key="0" value="Name"/>
+        </list>
+        <parameter key="time_zone" value="SYSTEM"/>
+        <parameter key="locale" value="English (United States)"/>
+        <parameter key="encoding" value="windows-1250"/>
+        <list key="data_set_meta_data_information">
+          <parameter key="0" value="id.true.integer.id"/>
+          <parameter key="1" value="articulo.true.text.attribute"/>
+          <parameter key="2" value="clase.true.text.label"/>
+        </list>
+        <parameter key="read_not_matching_values_as_missings" value="true"/>
+        <parameter key="datamanagement" value="double_array"/>
+      </operator>
+      <operator activated="true" class="select_attributes" compatibility="6.0.008" expanded="true" height="76" name="Select Attributes (2)" width="90" x="45" y="120">
+        <parameter key="attribute_filter_type" value="single"/>
+        <parameter key="attribute" value="articulo"/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="attribute_value"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="time"/>
+        <parameter key="block_type" value="attribute_block"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_matrix_row_start"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+      </operator>
+      <operator activated="true" class="text:process_document_from_data" compatibility="5.3.002" expanded="true" height="76" name="Process Documents from Data" width="90" x="45" y="210">
+        <parameter key="create_word_vector" value="true"/>
+        <parameter key="vector_creation" value="Term Frequency"/>
+        <parameter key="add_meta_information" value="true"/>
+        <parameter key="keep_text" value="false"/>
+        <parameter key="prune_method" value="none"/>
+        <parameter key="prune_below_percent" value="3.0"/>
+        <parameter key="prune_above_percent" value="30.0"/>
+        <parameter key="prune_below_rank" value="0.05"/>
+        <parameter key="prune_above_rank" value="0.95"/>
+        <parameter key="datamanagement" value="double_sparse_array"/>
+        <parameter key="select_attributes_and_weights" value="false"/>
+        <list key="specify_weights"/>
+        <process expanded="true">
+          <operator activated="true" class="text:transform_cases" compatibility="5.3.002" expanded="true" height="60" name="Transform Cases" width="90" x="112" y="165">
+            <parameter key="transform_to" value="lower case"/>
+          </operator>
+          <operator activated="true" class="text:filter_stopwords_dictionary" compatibility="5.3.002" expanded="true" height="76" name="Filter Stopwords (Dictionary)" width="90" x="246" y="165">
+            <parameter key="file" value="C:\Users\Richard\IdeaProjects\practica_1_java\stopwords\stop-words-spanish.txt"/>
+            <parameter key="case_sensitive" value="false"/>
+            <parameter key="encoding" value="windows-1250"/>
+          </operator>
+          <operator activated="true" class="text:tokenize" compatibility="5.3.002" expanded="true" height="60" name="Tokenize" width="90" x="380" y="165">
+            <parameter key="mode" value="non letters"/>
+            <parameter key="characters" value=".:"/>
+            <parameter key="language" value="English"/>
+            <parameter key="max_token_length" value="3"/>
+          </operator>
+          <operator activated="true" class="text:filter_by_length" compatibility="5.3.002" expanded="true" height="60" name="Filter Tokens (by Length)" width="90" x="514" y="165">
+            <parameter key="min_chars" value="3"/>
+            <parameter key="max_chars" value="25"/>
+          </operator>
+          <connect from_port="document" to_op="Transform Cases" to_port="document"/>
+          <connect from_op="Transform Cases" from_port="document" to_op="Filter Stopwords (Dictionary)" to_port="document"/>
+          <connect from_op="Filter Stopwords (Dictionary)" from_port="document" to_op="Tokenize" to_port="document"/>
+          <connect from_op="Tokenize" from_port="document" to_op="Filter Tokens (by Length)" to_port="document"/>
+          <connect from_op="Filter Tokens (by Length)" from_port="document" to_port="document 1"/>
+          <portSpacing port="source_document" spacing="0"/>
+          <portSpacing port="sink_document 1" spacing="0"/>
+          <portSpacing port="sink_document 2" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="select_attributes" compatibility="6.0.008" expanded="true" height="76" name="Select Attributes" width="90" x="45" y="300">
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="attribute" value="clase"/>
+        <parameter key="attributes" value="clase|articulo"/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="attribute_value"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="time"/>
+        <parameter key="block_type" value="attribute_block"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_matrix_row_start"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+      </operator>
+      <operator activated="true" class="split_validation" compatibility="6.0.008" expanded="true" height="112" name="Validation" width="90" x="246" y="255">
+        <parameter key="create_complete_model" value="false"/>
+        <parameter key="split" value="relative"/>
+        <parameter key="split_ratio" value="1.0"/>
+        <parameter key="training_set_size" value="100"/>
+        <parameter key="test_set_size" value="-1"/>
+        <parameter key="sampling_type" value="linear sampling"/>
+        <parameter key="use_local_random_seed" value="false"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <process expanded="true">
+          <operator activated="true" class="naive_bayes" compatibility="6.0.008" expanded="true" height="76" name="Naive Bayes" width="90" x="112" y="75">
+            <parameter key="laplace_correction" value="false"/>
+          </operator>
+          <connect from_port="training" to_op="Naive Bayes" to_port="training set"/>
+          <connect from_op="Naive Bayes" from_port="model" to_port="model"/>
+          <portSpacing port="source_training" spacing="0"/>
+          <portSpacing port="sink_model" spacing="0"/>
+          <portSpacing port="sink_through 1" spacing="0"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="read_csv" compatibility="6.0.008" expanded="true" height="60" name="Read CSV" width="90" x="45" y="210">
+            <parameter key="csv_file" value="C:\Users\Richard\IdeaProjects\practica_1_java\csv\listin-articulos-test.csv"/>
+            <parameter key="column_separators" value=","/>
+            <parameter key="trim_lines" value="false"/>
+            <parameter key="use_quotes" value="true"/>
+            <parameter key="quotes_character" value="&quot;"/>
+            <parameter key="escape_character" value="\"/>
+            <parameter key="skip_comments" value="false"/>
+            <parameter key="comment_characters" value="#"/>
+            <parameter key="parse_numbers" value="true"/>
+            <parameter key="decimal_character" value="."/>
+            <parameter key="grouped_digits" value="false"/>
+            <parameter key="grouping_character" value=","/>
+            <parameter key="date_format" value=""/>
+            <parameter key="first_row_as_names" value="true"/>
+            <list key="annotations"/>
+            <parameter key="time_zone" value="SYSTEM"/>
+            <parameter key="locale" value="English (United States)"/>
+            <parameter key="encoding" value="windows-1250"/>
+            <list key="data_set_meta_data_information">
+              <parameter key="0" value=".true.integer.id"/>
+              <parameter key="1" value=".true.text.regular"/>
+              <parameter key="2" value=".true.text.label"/>
+            </list>
+            <parameter key="read_not_matching_values_as_missings" value="true"/>
+            <parameter key="datamanagement" value="double_array"/>
+          </operator>
+          <operator activated="true" class="select_attributes" compatibility="6.0.008" expanded="true" height="76" name="Select Attributes (3)" width="90" x="45" y="300">
+            <parameter key="attribute_filter_type" value="single"/>
+            <parameter key="attribute" value="articulo"/>
+            <parameter key="attributes" value=""/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="attribute_value"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="time"/>
+            <parameter key="block_type" value="attribute_block"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="value_matrix_row_start"/>
+            <parameter key="invert_selection" value="false"/>
+            <parameter key="include_special_attributes" value="false"/>
+          </operator>
+          <operator activated="true" class="text:process_document_from_data" compatibility="5.3.002" expanded="true" height="76" name="Process Documents from Data (2)" width="90" x="179" y="300">
+            <parameter key="create_word_vector" value="true"/>
+            <parameter key="vector_creation" value="Term Frequency"/>
+            <parameter key="add_meta_information" value="true"/>
+            <parameter key="keep_text" value="false"/>
+            <parameter key="prune_method" value="none"/>
+            <parameter key="prune_below_percent" value="3.0"/>
+            <parameter key="prune_above_percent" value="30.0"/>
+            <parameter key="prune_below_rank" value="0.05"/>
+            <parameter key="prune_above_rank" value="0.95"/>
+            <parameter key="datamanagement" value="double_sparse_array"/>
+            <parameter key="select_attributes_and_weights" value="false"/>
+            <list key="specify_weights"/>
+            <process expanded="true">
+              <operator activated="true" class="text:transform_cases" compatibility="5.3.002" expanded="true" height="60" name="Transform Cases (2)" width="90" x="112" y="165">
+                <parameter key="transform_to" value="lower case"/>
+              </operator>
+              <operator activated="true" class="text:filter_stopwords_dictionary" compatibility="5.3.002" expanded="true" height="76" name="Filter Stopwords (2)" width="90" x="246" y="165">
+                <parameter key="file" value="C:\Users\Richard\IdeaProjects\practica_1_java\stopwords\stop-words-spanish.txt"/>
+                <parameter key="case_sensitive" value="false"/>
+                <parameter key="encoding" value="windows-1250"/>
+              </operator>
+              <operator activated="true" class="text:tokenize" compatibility="5.3.002" expanded="true" height="60" name="Tokenize (2)" width="90" x="380" y="165">
+                <parameter key="mode" value="non letters"/>
+                <parameter key="characters" value=".:"/>
+                <parameter key="language" value="English"/>
+                <parameter key="max_token_length" value="3"/>
+              </operator>
+              <operator activated="true" class="text:filter_by_length" compatibility="5.3.002" expanded="true" height="60" name="Filter Tokens (2)" width="90" x="514" y="165">
+                <parameter key="min_chars" value="3"/>
+                <parameter key="max_chars" value="25"/>
+              </operator>
+              <connect from_port="document" to_op="Transform Cases (2)" to_port="document"/>
+              <connect from_op="Transform Cases (2)" from_port="document" to_op="Filter Stopwords (2)" to_port="document"/>
+              <connect from_op="Filter Stopwords (2)" from_port="document" to_op="Tokenize (2)" to_port="document"/>
+              <connect from_op="Tokenize (2)" from_port="document" to_op="Filter Tokens (2)" to_port="document"/>
+              <connect from_op="Filter Tokens (2)" from_port="document" to_port="document 1"/>
+              <portSpacing port="source_document" spacing="0"/>
+              <portSpacing port="sink_document 1" spacing="0"/>
+              <portSpacing port="sink_document 2" spacing="0"/>
+            </process>
+          </operator>
+          <operator activated="true" class="select_attributes" compatibility="6.0.008" expanded="true" height="76" name="Select Attributes (4)" width="90" x="179" y="210">
+            <parameter key="attribute_filter_type" value="all"/>
+            <parameter key="attribute" value="clase"/>
+            <parameter key="attributes" value="clase|articulo"/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="attribute_value"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="time"/>
+            <parameter key="block_type" value="attribute_block"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="value_matrix_row_start"/>
+            <parameter key="invert_selection" value="false"/>
+            <parameter key="include_special_attributes" value="false"/>
+          </operator>
+          <operator activated="true" class="apply_model" compatibility="6.0.008" expanded="true" height="76" name="Apply Model (2)" width="90" x="45" y="30">
+            <list key="application_parameters"/>
+            <parameter key="create_view" value="false"/>
+          </operator>
+          <operator activated="true" class="performance_classification" compatibility="6.0.008" expanded="true" height="76" name="Performance (2)" width="90" x="179" y="30">
+            <parameter key="main_criterion" value="first"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="classification_error" value="true"/>
+            <parameter key="kappa" value="false"/>
+            <parameter key="weighted_mean_recall" value="false"/>
+            <parameter key="weighted_mean_precision" value="false"/>
+            <parameter key="spearman_rho" value="false"/>
+            <parameter key="kendall_tau" value="false"/>
+            <parameter key="absolute_error" value="false"/>
+            <parameter key="relative_error" value="false"/>
+            <parameter key="relative_error_lenient" value="false"/>
+            <parameter key="relative_error_strict" value="false"/>
+            <parameter key="normalized_absolute_error" value="false"/>
+            <parameter key="root_mean_squared_error" value="false"/>
+            <parameter key="root_relative_squared_error" value="false"/>
+            <parameter key="squared_error" value="false"/>
+            <parameter key="correlation" value="false"/>
+            <parameter key="squared_correlation" value="false"/>
+            <parameter key="cross-entropy" value="false"/>
+            <parameter key="margin" value="false"/>
+            <parameter key="soft_margin_loss" value="false"/>
+            <parameter key="logistic_loss" value="false"/>
+            <parameter key="skip_undefined_labels" value="true"/>
+            <parameter key="use_example_weights" value="true"/>
+            <list key="class_weights"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (2)" to_port="model"/>
+          <connect from_op="Read CSV" from_port="output" to_op="Select Attributes (3)" to_port="example set input"/>
+          <connect from_op="Select Attributes (3)" from_port="example set output" to_op="Process Documents from Data (2)" to_port="example set"/>
+          <connect from_op="Process Documents from Data (2)" from_port="example set" to_op="Select Attributes (4)" to_port="example set input"/>
+          <connect from_op="Select Attributes (4)" from_port="example set output" to_op="Apply Model (2)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (2)" from_port="labelled data" to_op="Performance (2)" to_port="labelled data"/>
+          <connect from_op="Performance (2)" from_port="performance" to_port="averagable 1"/>
+          <portSpacing port="source_model" spacing="0"/>
+          <portSpacing port="source_test set" spacing="0"/>
+          <portSpacing port="source_through 1" spacing="0"/>
+          <portSpacing port="sink_averagable 1" spacing="0"/>
+          <portSpacing port="sink_averagable 2" spacing="0"/>
+        </process>
+      </operator>
+      <connect from_op="Read CSV (2)" from_port="output" to_op="Select Attributes (2)" to_port="example set input"/>
+      <connect from_op="Select Attributes (2)" from_port="example set output" to_op="Process Documents from Data" to_port="example set"/>
+      <connect from_op="Process Documents from Data" from_port="example set" to_op="Select Attributes" to_port="example set input"/>
+      <connect from_op="Select Attributes" from_port="original" to_op="Validation" to_port="training"/>
+      <connect from_op="Validation" from_port="model" to_port="result 1"/>
+      <connect from_op="Validation" from_port="training" to_port="result 3"/>
+      <connect from_op="Validation" from_port="averagable 1" to_port="result 2"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+      <portSpacing port="sink_result 4" spacing="0"/>
+    </process>
+  </operator>
+</process>
